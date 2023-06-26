@@ -1,0 +1,33 @@
+version: '3'
+services:
+    db:
+        image: "postgres:11.7"
+        ports:
+            - "28039:5432"
+        environment:
+            - POSTGRES_USER=odoo
+            - POSTGRES_PASSWORD=odoo
+            - POSTGRES_DB=postgres
+        volumes:
+            - c12-db-data-advics:/var/lib/postgresql/data
+            #- /home/docker/dev-advics/conf/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+        container_name: postgresql-12-ee-advics
+    odoo:
+        image: "invosasystems/odoo-invosa:12.0"
+        ports:
+            - "8068:8069"
+        volumes:
+            - c12-odoo-data-advics:/var/lib/odoo
+            - /home/docker/dev-advics/custom/ee12:/mnt/ins-addons
+            - /home/docker/dev-advics/backups/ee12:/mnt/odoo-backups
+            - /home/docker/dev-advics/logs/:/mnt/odoo-logs
+            - /home/docker/dev-advics/conf/odoo.conf:/etc/odoo/odoo.conf
+        container_name: odoo-12-ee-advics
+        links:
+            - db:db
+
+volumes:
+    c12-db-data-advics:
+    c12-odoo-data-advics:
+
+
